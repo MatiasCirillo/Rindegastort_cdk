@@ -1,0 +1,11 @@
+{
+    "fecha_impresion": "The date when the receipt or invoice was printed. Format should be 'YYYY-MM-DD'.",
+    "monto_total": "The total amount on the receipt or invoice, including taxes. Remove any special characters like ($).",
+    "iva": "The VAT (Impuesto al Valor Agregado) applied to the total amount. Can be a percentage or a fixed amount. If 'EXENTO', the value is 0.",
+    "razon_social": "The name of the company or business issuing the receipt or invoice.",
+    "punto_de_venta": "The point of sale number or identifier from where the receipt or invoice was issued.",
+    "numero_comprobante": "The unique number or code of the receipt or invoice.",
+    "tipo_factura": "The type of invoice, for example: Factura A, Factura B, Factura C, Factura E.",
+    "cuit": "The unique tax identification number (CUIT) of the business. In Argentina, the CUIT follows the format XX-XXXXXXXX-X.",
+    "categoria": "The category of the invoice or receipt, which may define the tax treatment, such as Servicios, Impuestos, Refrigerios, Muebles y Equipos, Reparación y Mantenimiento, Viáticos y Movilidad, Gastos Administrativos, Eventos."
+}
