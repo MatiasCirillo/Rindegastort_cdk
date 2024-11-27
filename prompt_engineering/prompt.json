@@ -1,11 +1,11 @@
 {
-    "fecha_impresion": "The date when the receipt or invoice was printed. Format should be 'YYYY-MM-DD'.",
-    "monto_total": "The total amount on the receipt or invoice, including taxes. Remove any special characters like ($).",
-    "iva": "The VAT (Impuesto al Valor Agregado) applied to the total amount. Can be a percentage or a fixed amount. If 'EXENTO', the value is 0.",
-    "razon_social": "The name of the company or business issuing the receipt or invoice.",
-    "punto_de_venta": "The point of sale number or identifier from where the receipt or invoice was issued.",
-    "numero_comprobante": "The unique number or code of the receipt or invoice.",
-    "tipo_factura": "The type of invoice, for example: Factura A, Factura B, Factura C, Factura E.",
-    "cuit": "The unique tax identification number (CUIT) of the business. In Argentina, the CUIT follows the format XX-XXXXXXXX-X.",
-    "categoria": "The category of the invoice or receipt, which may define the tax treatment, such as Servicios, Impuestos, Refrigerios, Muebles y Equipos, Reparación y Mantenimiento, Viáticos y Movilidad, Gastos Administrativos, Eventos."
+    "fecha_impresion": "La fecha en la que el comprobante fue pagado, en el caso que tambien cuente con fecha de vencimiento de pago y sea mayor a 2 dias de diferencia con la de impresion, usa la fecha de vencimiento, sino usa la fecha de impresion. Generalmente el formato es 'DD-MM-YYYY' ",
+    "monto_total": "El total a pagar del comprobante, incluyendo impuestos. Tener en cuenta que hay veces que hay totales dependiendo la fecha de vencimiento, en ese caso, obtener la que contiene el menor valor. Remover cualquier caracter especial como este ($).",
+    "iva": "La condicion o responsabilidad frente al IVA del emisor del comprobante, puede ser: 'IVA Responsable Inscripto', en ese caso indicar con la letra 'I'. 'IVA no Responsable', en ese caso indicar con la letra 'N'. 'IVA exento', en ese caso indicar con la letra 'E'. 'Responsable Monotributo', en ese caso indicar con la letra 'M'. 'Monotributista Social', en ese caso indicar con la letra 'S',",
+    "razon_social": "El nombre de la compañia, negocio, entidad o persona que emite el comprobante. Siempre toma el ",
+    "punto_de_venta": "El punto de venta o 'PV' de la factura, generalmente se encuentra a la izquierda o arriba del 'Numero de Comprobante' o 'Numero de Ticket' o 'Numero de Factura' o 'Numero de Servicio'",
+    "numero_comprobante": "Es el identificador principal del comprobante y puede ser hayado como 'Numero de Comprobante' o 'Numero de Ticket' o 'Numero de Factura' o 'Numero de Servicio' o 'Comp. Nro'",
+    "tipo_factura": "El tipo de comprobante o tipo de factura, que pude ser puede ser 'A', 'B', 'C', 'M', 'E', 'T' (en el caso de ser un ticket). Tambien puede estar bajo el nombre de 'Tique', 'Tique Factura', 'Recibo', 'Liquidacion de servicios', entre otros",
+    "cuit": "El CUIT es la identificacion unica tibutaria Argentina, se trata de una serie de numeros. Puede encontrarse de dos maneras, o en el formato 'XX-XXXXXXXX-X' o directamente todos los digitos juntos 'XXXXXXXXXXX' .",
+    "categoria": "The category of the invoice or receipt, such as Servicios, Impuestos, Refrigerios, Muebles y Equipos, Reparación y Mantenimiento, Viáticos y Movilidad, Gastos Administrativos, Eventos, etc. Suelen ser el servicio que se intercambia por el dinero y generalmente esta relacionado al negocio del emisor de la factura."
 }

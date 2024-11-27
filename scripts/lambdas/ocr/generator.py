@@ -17,7 +17,9 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Environment variables
-CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "anthropic.claude-3-5-sonnet-20240620-v1:0") # anthropic.claude-3-haiku-20240307-v1:0
+CLAUDE_MODEL = os.environ.get(
+    "CLAUDE_MODEL", "anthropic.claude-3-haiku-20240307-v1:0"
+)  # "anthropic.claude-3-5-sonnet-20240620-v1:0") # anthropic.claude-3-haiku-20240307-v1:0
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
 FILE_KEY = os.environ.get("FILE_KEY")
 DYNAMODB_TABLE_NAME = os.environ.get("DYNAMODB_TABLE_NAME")
@@ -45,8 +47,7 @@ def lambda_handler(event, context):
             bucket = body["s3"]["bucket"]
             key = body["s3"]["key"]
             id_usuario = body.get("id_usuario", "anonimo")
-        
-        
+
         logger.info(
             f"Processing file from bucket: {bucket}, key: {key}, id_usuario: {id_usuario}"
         )
@@ -56,6 +57,7 @@ def lambda_handler(event, context):
         uuid = hashlib.sha256(file_name.encode()).hexdigest()
 
         # Download the file from S3
+        print(f"bucket: {bucket}, key: {key}")
         file_content = download_file_from_s3(bucket, key)
 
         # Determine file type based on extension

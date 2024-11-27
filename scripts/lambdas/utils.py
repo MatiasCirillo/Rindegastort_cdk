@@ -132,27 +132,40 @@ def read_prompt_from_s3(bucket_name, file_key):
 
 
 def extract_json(text):
-
-    # Buscar el primer '{' y el último '}'
+    # Buscar el primer '{' y luego equilibrar las llaves
     start = text.find("{")
-    end = text.rfind("}")
 
-    if start == -1 or end == -1:
+    if start == -1:
         raise ValueError("No se encontró un JSON válido en el texto")
 
-    # Extraer el posible JSON
-    json_string = text[start : end + 1]
+    # Contadores para abrir y cerrar llaves
+    open_braces = 0
+    end = start
 
-    # Limpiar cualquier texto adicional antes o después de las llaves
-    json_string = re.sub(r"^[^{]*", "", json_string)
-    json_string = re.sub(r"[^}]*$", "", json_string)
+    # Recorre el texto desde la primera llave de apertura
+    for i in range(start, len(text)):
+        char = text[i]
+        if char == "{":
+            open_braces += 1
+        elif char == "}":
+            open_braces -= 1
+
+        # Cuando el número de llaves está equilibrado, hemos encontrado el JSON
+        if open_braces == 0:
+            end = i
+            break
+
+    # Extraer el texto JSON equilibrado
+    json_string = text[start : end + 1]
 
     try:
         # Intentar parsear el JSON
         parsed_json = json.loads(json_string)
         return json_string
     except json.JSONDecodeError:
-        return text
+        raise ValueError(
+            "Error al decodificar el JSON extraído. Revisa el formato del JSON."
+        )
 
 
 def merge_json_results(results):

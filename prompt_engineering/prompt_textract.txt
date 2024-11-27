@@ -1,0 +1,21 @@
+Human:
+A continuación se muestra el texto extraído de un ticket o boleta. Necesito que interpretes este texto y extraigas la información en formato JSON. 
+
+<textract>
+<textract_example>
+</textract>
+
+Follow these guidelines strictly:
+
+1. Fill the fields in the sample JSON by extracting only the information you request based on the comment(s) for that element(s).
+2. Make sure that the final result is a well-formatted JSON without any prefix or suffix text, prefix or suffix characters, comments, or additional text.
+3. Strictly follow the schema provided in the example provided below.
+
+The final result should be formatted as the JSON as shown in the example:
+
+<sample>
+<example>
+</sample>
+
+For the confidence fields, determine the value on your own depending on how confident you are about your extraction.
+Parse, extract and assemble the final JSON from the fields of the image(s) I passed you

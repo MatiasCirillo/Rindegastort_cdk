@@ -26,7 +26,7 @@ class RindegastORTCdkStack(Stack):
         rindegastort_data_bucket = s3.Bucket(
             self,
             "RindeGastORTDataBucket",
-            bucket_name=f"rindegastort-data-bucket",
+            bucket_name=f"rindegastort-data-bucket-v2",
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
             removal_policy=RemovalPolicy.DESTROY,
             auto_delete_objects=True,
@@ -44,6 +44,25 @@ class RindegastORTCdkStack(Stack):
         ########################### DYNAMO DB ############################
 
         # Create a DynamoDB table
+        users_table = dynamodb.Table(
+            self,
+            "UsersTable",
+            table_name=f"rindegastort_users",
+            partition_key=dynamodb.Attribute(
+                name="id_usuario", type=dynamodb.AttributeType.NUMBER
+            ),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+            removal_policy=RemovalPolicy.DESTROY,
+        )
+        # Agregar el índice global secundario (GSI) para `email`
+        users_table.add_global_secondary_index(
+            index_name="email-index",
+            partition_key=dynamodb.Attribute(
+                name="email", type=dynamodb.AttributeType.STRING
+            ),
+            projection_type=dynamodb.ProjectionType.ALL,  # Puedes cambiar a `INCLUDE` o `KEYS_ONLY` si solo necesitas ciertos atributos
+        )
+
         file_metadata_table = dynamodb.Table(
             self,
             "FileMetadataTable",
@@ -53,6 +72,14 @@ class RindegastORTCdkStack(Stack):
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=RemovalPolicy.DESTROY,
+        )
+        # Agregar el índice global secundario (GSI) para `id_usuario`
+        file_metadata_table.add_global_secondary_index(
+            index_name="id_usuario-index",
+            partition_key=dynamodb.Attribute(
+                name="id_usuario", type=dynamodb.AttributeType.NUMBER
+            ),
+            projection_type=dynamodb.ProjectionType.ALL,  # Puedes cambiar a `INCLUDE` o `KEYS_ONLY` si solo necesitas ciertos atributos
         )
 
         ########################## Lambda #########################
@@ -79,7 +106,7 @@ class RindegastORTCdkStack(Stack):
             "GeneratorFunction",
             function_name="rinde_gastos_ocr_generator_function",
             runtime=_lambda.Runtime.PYTHON_3_8,
-            handler="ocr/generator.lambda_handler",
+            handler="ocr/generator_textract.lambda_handler",
             code=_lambda.Code.from_asset("scripts/lambdas"),
             layers=[pillow_layer, pyMUPDF_layer],
             timeout=Duration.seconds(300),
@@ -101,20 +128,24 @@ class RindegastORTCdkStack(Stack):
         generator_function.add_to_role_policy(
             iam.PolicyStatement(actions=["bedrock:*"], resources=["*"])
         )
+        # agregar politicas de acceso completo a textract
+        generator_function.add_to_role_policy(
+            iam.PolicyStatement(actions=["textract:*"], resources=["*"])
+        )
 
         # ############## ApiGateway ##############
 
-        # Crear API Gateway para exponer la Lambda 1
+        # Crear API Gateway con proxy habilitado
         api = apigateway.LambdaRestApi(
             self,
             "MyApiGateway",
             handler=generator_function,
-            proxy=False,  # Permite más control sobre los endpoints
+            proxy=True,  # Cambiar a True para habilitar el proxy
         )
 
         # Agregar un endpoint para manejar las invocaciones
         items = api.root.add_resource("extract")
-        items.add_method("GET")  # Definir el método GET
+        items.add_method("POST")  # Definir el método GET
 
         ########################### Deployamos prompt.txt dentro del bucket ###########################
 
